@@ -31,6 +31,7 @@ char brainfuck_op_chars[] = {
 typedef enum STATUS_FLAGS {
 	S_RUNNED		= (1<<0),
 	S_NEED_REDRAW	= (1<<1),
+	S_PRAM_RESET	= (1<<2),
 } STATUS_FLAGS;
 
 typedef enum MODE {
@@ -161,6 +162,13 @@ void draw_pram() {
 	iprintf("\x1b[0;0H%s", draw_pram_str);
 }
 
+void reset_pram() {
+	int cur;
+	cur ^= cur;
+	for (;cur < sizeof(pram)/sizeof(char);++cur)
+		pram[cur] = B_BLANK;
+}
+
 int main() {
 	int cur;
 	MODE m;
@@ -170,11 +178,7 @@ int main() {
 	irqEnable(IRQ_VBLANK);
 
 	consoleDemoInit();
-
-	cur ^= cur;
-
-	for (;cur < sizeof(pram)/sizeof(char);++cur)
-		pram[cur] = B_BLANK;
+	reset_pram();
 
 	cur ^= cur;
 	m ^= m;
@@ -196,6 +200,7 @@ int main() {
 						pram[cur] ^= pram[cur];
 
 					s |= S_NEED_REDRAW;
+					s &= ~S_PRAM_RESET;
 				}
 
 				if (keyState & KEY_DOWN) {
@@ -203,18 +208,38 @@ int main() {
 						pram[cur] = sizeof(brainfuck_op_chars)/sizeof(char)-1;
 
 					s |= S_NEED_REDRAW;
+					s &= ~S_PRAM_RESET;
 				}
 
-				if (keyState & (KEY_RIGHT | KEY_B))
+				if (keyState & (KEY_RIGHT | KEY_B)) {
 					if (++cur >= sizeof(pram)/sizeof(char))
 						cur ^= cur;
 
-				if (keyState & KEY_LEFT)
+					s &= ~S_PRAM_RESET;
+				}
+
+				if (keyState & KEY_LEFT) {
 					if (!cur--)
 						cur = sizeof(pram)/sizeof(char)-1;
 
-				if (keyState & KEY_START)
+					s &= ~S_PRAM_RESET;
+				}
+
+				if (keyState & KEY_START) {
 					m = M_RUNNER;
+					s &= ~S_PRAM_RESET;
+				}
+
+				if (keyState & KEY_SELECT) {
+					if (!(s & S_PRAM_RESET)) {
+						s |= S_PRAM_RESET;
+					} else {
+						reset_pram();
+						cur ^= cur;
+						s &= ~S_PRAM_RESET;
+						s |= S_NEED_REDRAW;
+					}
+				}
 
 				if (s & S_NEED_REDRAW)
 					draw_pram();
