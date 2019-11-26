@@ -100,6 +100,16 @@ void run() {
 				break;
 
 			case B_PUT_VAL:
+				if (dram_p < 0) {
+					iprintf("\nERROR: PTR < 0");
+					return;
+				}
+
+				if (sizeof(dram) / sizeof(char) <= dram_p) {
+					iprintf("\nERROR: PTR >= RAM SIZE");
+					return;
+				}
+
 				iprintf("%c", dram[dram_p]);
 				break;
 
