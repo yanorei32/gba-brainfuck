@@ -53,7 +53,7 @@ void run() {
 	block_cnt ^= block_cnt;
 	pram_p ^= pram_p;
 
-	for (;pram_p < sizeof(pram)/sizeof(char);++pram_p)
+	for (;pram_p < sizeof(pram)/sizeof(char);++pram_p) {
 		switch(pram[pram_p]) {
 			case B_BLANK:
 				break;
@@ -68,12 +68,12 @@ void run() {
 
 			case B_INC_VAL:
 				if (dram_p < 0) {
-					iprintf("\nERROR: PTR < 0\n");
+					iprintf("\nERROR: PTR < 0");
 					return;
 				}
 
 				if (sizeof(dram) / sizeof(char) <= dram_p) {
-					iprintf("\nERROR: PTR >= RAM SIZE\n");
+					iprintf("\nERROR: PTR >= RAM SIZE");
 					return;
 				}
 
@@ -83,12 +83,12 @@ void run() {
 
 			case B_DEC_VAL:
 				if (dram_p < 0) {
-					iprintf("\nERROR: PTR < 0\n");
+					iprintf("\nERROR: PTR < 0");
 					return;
 				}
 
 				if (sizeof(dram) / sizeof(char) <= dram_p) {
-					iprintf("\nERROR: PTR >= RAM SIZE\n");
+					iprintf("\nERROR: PTR >= RAM SIZE");
 					return;
 				}
 
@@ -104,7 +104,7 @@ void run() {
 				if (!dram[dram_p]) {
 					for (;;++pram_p) {
 						if (sizeof(pram) / sizeof(char) <= pram_p) {
-							iprintf("\nERROR: FAILED TO FIND ']'\n");
+							iprintf("\nERROR: FAILED TO FIND ']'");
 							return;
 						}
 
@@ -123,12 +123,11 @@ void run() {
 				if (dram[dram_p]) {
 					for (;;--pram_p) {
 						if (pram_p < 0) {
-							iprintf("\nERROR: FAILED TO FIND '['\n");
+							iprintf("\nERROR: FAILED TO FIND '['");
 							return;
 						}
 
 						if (pram[pram_p] == B_DO_WHILE) {
-							iprintf("d");
 							++block_cnt;
 							continue;
 						}
@@ -139,6 +138,13 @@ void run() {
 				}
 				break;
 		}
+
+		scanKeys();
+		if (keysDown() & KEY_SELECT) {
+			iprintf("\nKeyboard Interrupt");
+			break;
+		}
+	}
 }
 
 void draw_pram() {
