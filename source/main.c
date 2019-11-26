@@ -45,8 +45,10 @@ unsigned char dram[128];
 void run() {
 	int dram_p, pram_p, block_cnt;
 
-	for(dram_p ^= dram_p;dram_p < sizeof(dram)/sizeof(char);++dram_p)
-		dram[dram_p] = 0;
+	dram_p ^= dram_p;
+
+	for(;dram_p < sizeof(dram)/sizeof(char);++dram_p)
+		dram[dram_p] ^= dram[dram_p];
 
 	iprintf("\033[2J\x1b[0;0H");
 
@@ -151,7 +153,7 @@ void run() {
 void draw_pram() {
 	char draw_pram_str[sizeof(pram)/sizeof(char)+1];
 	int pram_p;
-	
+
 	pram_p ^= pram_p;
 
 	for (;pram_p < sizeof(pram)/sizeof(char);++pram_p)
@@ -163,10 +165,12 @@ void draw_pram() {
 }
 
 void reset_pram() {
-	int cur;
-	cur ^= cur;
-	for (;cur < sizeof(pram)/sizeof(char);++cur)
-		pram[cur] = B_BLANK;
+	int pram_p;
+
+	pram_p ^= pram_p;
+
+	for (;pram_p < sizeof(pram)/sizeof(char);++pram_p)
+		pram[pram_p] = B_BLANK;
 }
 
 int main() {
