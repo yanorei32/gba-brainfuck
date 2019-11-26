@@ -46,7 +46,6 @@ void run() {
 	int dram_p, pram_p, block_cnt;
 
 	dram_p ^= dram_p;
-
 	for(;dram_p < sizeof(dram)/sizeof(char);++dram_p)
 		dram[dram_p] ^= dram[dram_p];
 
@@ -107,6 +106,11 @@ void run() {
 
 				if (sizeof(dram) / sizeof(char) <= dram_p) {
 					iprintf("\nERROR: PTR >= RAM SIZE");
+					return;
+				}
+
+				if (!dram[dram_p]) {
+					iprintf("\nERROR: '\\0' OUTPUT.");
 					return;
 				}
 
