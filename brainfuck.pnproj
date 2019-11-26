@@ -1,4 +1,4 @@
-<Project name="gba_brainfuck">
+<Project name="brainfuck">
 	<MagicFolder excludeFolders="CVS;.svn" filter="*.h" name="include" path="include\"></MagicFolder>
 	<MagicFolder excludeFolders="CVS;.svn" filter="*.c;*.cpp" name="source" path="source\">
 		<File path="main.c"></File>
