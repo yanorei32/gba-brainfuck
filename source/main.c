@@ -44,6 +44,7 @@ unsigned char dram[128];
 
 void run() {
 	int dram_p, pram_p, block_cnt;
+	u16 key_state;
 
 	dram_p ^= dram_p;
 	for(;dram_p < sizeof(dram)/sizeof(char);++dram_p)
@@ -117,6 +118,39 @@ void run() {
 				iprintf("%c", dram[dram_p]);
 				break;
 
+			case B_GET_VAL:
+				iprintf("\n");
+
+				while (1) {
+					iprintf("\033[9DINPUT: %02X", dram[dram_p]);
+
+					scanKeys();
+					key_state = keysDown();
+
+					if (key_state & KEY_START)
+						break;
+
+					if (key_state & (KEY_A | KEY_UP))
+						++dram[dram_p];
+
+					if (key_state & (KEY_B | KEY_DOWN))
+						--dram[dram_p];
+
+					if (key_state & KEY_LEFT)
+						dram[dram_p] -= 0x10;
+
+					if (key_state & KEY_RIGHT)
+						dram[dram_p] += 0x10;
+
+					if (key_state & KEY_SELECT)
+						goto stop;
+
+					VBlankIntrWait();
+				}
+				iprintf("\n");
+				
+				break;
+
 			case B_WHILE:
 				if (!dram[dram_p]) {
 					for (;;++pram_p) {
@@ -158,6 +192,7 @@ void run() {
 
 		scanKeys();
 		if (keysDown() & KEY_SELECT) {
+stop:
 			iprintf("\nKeyboard Interrupt");
 			break;
 		}
@@ -191,6 +226,7 @@ int main() {
 	int cur;
 	MODE m;
 	STATUS_FLAGS s;
+	u16 key_state;
 
 	irqInit();
 	irqEnable(IRQ_VBLANK);
@@ -204,7 +240,7 @@ int main() {
 
 	while (1) {
 		scanKeys();
-		u16 keyState = keysDown();
+		key_state = keysDown();
 
 		switch (m) {
 			case M_EDITOR:
@@ -213,7 +249,7 @@ int main() {
 					s |= S_NEED_REDRAW;
 				}
 
-				if (keyState & (KEY_UP | KEY_A)) {
+				if (key_state & (KEY_UP | KEY_A)) {
 					if (++pram[cur] == sizeof(brainfuck_op_chars)/sizeof(char))
 						pram[cur] ^= pram[cur];
 
@@ -221,7 +257,7 @@ int main() {
 					s &= ~S_PRAM_RESET;
 				}
 
-				if (keyState & KEY_DOWN) {
+				if (key_state & KEY_DOWN) {
 					if (!pram[cur]--)
 						pram[cur] = sizeof(brainfuck_op_chars)/sizeof(char)-1;
 
@@ -229,26 +265,26 @@ int main() {
 					s &= ~S_PRAM_RESET;
 				}
 
-				if (keyState & (KEY_RIGHT | KEY_B)) {
+				if (key_state & (KEY_RIGHT | KEY_B)) {
 					if (++cur >= sizeof(pram)/sizeof(char))
 						cur ^= cur;
 
 					s &= ~S_PRAM_RESET;
 				}
 
-				if (keyState & KEY_LEFT) {
+				if (key_state & KEY_LEFT) {
 					if (!cur--)
 						cur = sizeof(pram)/sizeof(char)-1;
 
 					s &= ~S_PRAM_RESET;
 				}
 
-				if (keyState & KEY_START) {
+				if (key_state & KEY_START) {
 					m = M_RUNNER;
 					s &= ~S_PRAM_RESET;
 				}
 
-				if (keyState & KEY_SELECT) {
+				if (key_state & KEY_SELECT) {
 					if (!(s & S_PRAM_RESET)) {
 						s |= S_PRAM_RESET;
 					} else {
@@ -270,7 +306,7 @@ int main() {
 					s |= S_RUNNED;
 				}
 
-				if (keyState & KEY_SELECT)
+				if (key_state & KEY_SELECT)
 					m = M_EDITOR;
 
 				break;
