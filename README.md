@@ -26,7 +26,10 @@ cd gba-brainfuck
 
 ### Operability confirmed environments
 
+* GBA AGB-001 AGB-JPN (with EZ Flash IV)
 * GBA AGB-001 AGB-JPN-1 (with EZ Flash IV)
+* GBA AGB-001 C/AGB-JPN (with EZ Flash IV)
+* GBA AGB-001 C/AGB-JPN-1 (with EZ Flash IV)
 * GBA SP AGS-001 C/AGS-JPN (with EZ Flash IV)
 * [VisualBoyAdvance 1.7.2](https://ja.osdn.net/projects/sfnet_vba/) latest version as of 2019-11-28
 * [VisualBoyAdvance-M 2.1.4](https://github.com/visualboyadvance-m/visualboyadvance-m) latest version as of 2019-11-28
