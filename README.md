@@ -1,6 +1,21 @@
 # GBA Brainfuck
 
-## How to use
+## How to build
+
+Dep:
+* Docker
+
+```bash
+git clone https://github.com/yanorei32/gba-brainfuck/
+cd gba-brainfuck
+./make # It will output brainfuck.gba
+
+# If you want to pass some arguments to make:
+./make clean
+```
+
+
+## Key binding and mode
 
 This application has two modes.
 
