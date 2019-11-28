@@ -41,10 +41,10 @@ After power-on, it will go to Editor Mode.
 
 | Key                | Binding                                           |
 |:-------------------|:--------------------------------------------------|
-| `→` or `A`         | Move the cursor to next program memory.           |
-| `←`                | Move the cursor to forward program memory.        |
-| `↑` or `B`         | Change program memory operator.                   |
+| `↑` or `A`         | Change program memory operator.                   |
 | `↓`'               | Change program memory operator.                   |
+| `→` or `B`         | Move the cursor to next program memory.           |
+| `←`                | Move the cursor to forward program memory.        |
 | `START`            | Switch to Runner Mode and execute program memory. |
 | `SELECT`, `SELECT` | Reset program memory and cursor position.         |
 
@@ -100,5 +100,14 @@ If this happens, you tried to print NULL character.
 Output:
 ```
 ERROR: '\0' OUTPUT.
+```
+
+### Syntax error
+It's your typo.
+
+Output:
+```
+ERROR: FAILED TO FIND '['
+ERROR: FAILED TO FIND ']'
 ```
 
