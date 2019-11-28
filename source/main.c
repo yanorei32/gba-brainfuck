@@ -122,7 +122,7 @@ void run() {
 				iprintf("\n");
 
 				while (1) {
-					iprintf("\033[9DINPUT: %02X", dram[dram_p]);
+					iprintf("\033[11DINPUT: 0x%02X", dram[dram_p]);
 
 					scanKeys();
 					key_state = keysDown();
