@@ -1,19 +1,32 @@
 # GBA Brainfuck
 
-## How to build
+Demo: https://www.youtube.com/watch?v=Dc2VkSRkmuM
 
-Dep:
+## How to build GBA file
+
+### Depends
+* git
 * Docker
 
+### Build
 ```bash
 git clone https://github.com/yanorei32/gba-brainfuck/
 cd gba-brainfuck
 ./make # It will output brainfuck.gba
+```
 
-# If you want to pass some arguments to make:
+#### If you want to pass some arguments to make:
+
+```bash
 ./make clean
 ```
 
+### Operability confirmed environments
+
+* GBA AGB-001 AGB-JPN-1 (with EZ Flash IV)
+* GBA SP AGS-001 C/AGS-JPN (with EZ Flash IV)
+* [VisualBoyAdvance 1.7.2](https://ja.osdn.net/projects/sfnet_vba/) latest version as of 2019-11-28
+* [VisualBoyAdvance-M 2.1.4](https://github.com/visualboyadvance-m/visualboyadvance-m) latest version as of 2019-11-28
 
 ## Key binding and mode
 
@@ -25,12 +38,12 @@ After power-on, it will go to Editor Mode.
 
 | Key                | Binding                                           |
 |:-------------------|:--------------------------------------------------|
-| `→` or `A`         | Move the cursor to next Program Memory.           |
-| `←`                | Move the cursor to forward Program Memory.        |
-| `↑` or `B`         | Change Program Memory Operator.                   |
-| `↓`'               | Change Program Memory Operator.                   |
-| `START`            | Switch to Runner Mode and execute Program Memory. |
-| `SELECT`, `SELECT` | Reset Program Memory and cursor position.         |
+| `→` or `A`         | Move the cursor to next program memory.           |
+| `←`                | Move the cursor to forward program memory.        |
+| `↑` or `B`         | Change program memory operator.                   |
+| `↓`'               | Change program memory operator.                   |
+| `START`            | Switch to Runner Mode and execute program memory. |
+| `SELECT`, `SELECT` | Reset program memory and cursor position.         |
 
 ### Runner Mode
 
@@ -55,15 +68,17 @@ After power-on, it will go to Editor Mode.
 
 ## Operators
 
-| Operator | Description                                             |
-|:---------|:--------------------------------------------------------|
-| ` `      | Blank. Do nothing.                                      |
-| `+`      | Increment data memory.                                  |
-| `-`      | Decrement data memory.                                  |
-| `>`      | Increment data memory pointer.                          |
-| `<`      | Decrement data memory pointer.                          |
-| `.`      | Output data memory as ASCII character.                  |
-| `,`      | Input data memory as hex. It will showing input prompt. |
+| Operator | Description                                                               |
+|:---------|:--------------------------------------------------------------------------|
+| ` `      | Blank. Do nothing.                                                        |
+| `+`      | Increment current data memory.                                            |
+| `-`      | Decrement current data memory.                                            |
+| `>`      | Increment data memory pointer.                                            |
+| `<`      | Decrement data memory pointer.                                            |
+| `.`      | Output current data memory as ASCII character.                            |
+| `,`      | Input current data memory as hex. It will showing input prompt.           |
+| `[`      | If current data memory is zero, jump to matching parenthesis ( `]` ).     |
+| `]`      | If current data memory is non-zero, jump to matching parenthesis ( `[` ). |
 
 ## Exceptions
 
@@ -83,5 +98,4 @@ Output:
 ```
 ERROR: '\0' OUTPUT.
 ```
-
 
