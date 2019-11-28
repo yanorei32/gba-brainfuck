@@ -1,6 +1,8 @@
 # GBA Brainfuck
-
+Brainfuck interpreter for GBA.
 Demo: https://www.youtube.com/watch?v=Dc2VkSRkmuM
+
+This application is based in part on the work of the devkitpro project (http://sourceforge.net/projects/devkitpro).
 
 ## How to build GBA file
 
@@ -70,7 +72,7 @@ After power-on, it will go to Editor Mode.
 
 | Operator | Description                                                               |
 |:---------|:--------------------------------------------------------------------------|
-| ` `      | Blank. Do nothing.                                                        |
+| `&nbsp;` | Blank. Do nothing.                                                        |
 | `+`      | Increment current data memory.                                            |
 | `-`      | Decrement current data memory.                                            |
 | `>`      | Increment data memory pointer.                                            |
