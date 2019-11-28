@@ -73,7 +73,7 @@ After power-on, it will go to Editor Mode.
 
 | Operator | Description                                                               |
 |:---------|:--------------------------------------------------------------------------|
-| `&nbsp;` | Blank. Do nothing.                                                        |
+| ` `      | Blank. Do nothing.                                                        |
 | `+`      | Increment current data memory.                                            |
 | `-`      | Decrement current data memory.                                            |
 | `>`      | Increment data memory pointer.                                            |
