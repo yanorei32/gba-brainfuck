@@ -45,6 +45,7 @@ unsigned char dram[128];
 void run() {
 	int dram_p, pram_p, block_cnt;
 	u16 key_state;
+	STATUS_FLAGS s;
 
 	dram_p ^= dram_p;
 	for(;dram_p < sizeof(dram)/sizeof(char);++dram_p)
@@ -55,8 +56,12 @@ void run() {
 	dram_p ^= dram_p;
 	block_cnt ^= block_cnt;
 	pram_p ^= pram_p;
+	s ^= s;
 
 	for (;pram_p < sizeof(pram)/sizeof(char);++pram_p) {
+		scanKeys();
+		key_state = keysDown();
+
 		switch(pram[pram_p]) {
 			case B_BLANK:
 				break;
@@ -111,7 +116,7 @@ void run() {
 				}
 
 				if (!dram[dram_p]) {
-					iprintf("\nERROR: '\\0' OUTPUT.");
+					iprintf("\nERROR: '\\0' OUTPUT");
 					return;
 				}
 
@@ -121,34 +126,47 @@ void run() {
 			case B_GET_VAL:
 				iprintf("\n");
 
-				while (1) {
-					iprintf("\033[11DINPUT: 0x%02X", dram[dram_p]);
+				s |= S_NEED_REDRAW;
 
-					scanKeys();
-					key_state = keysDown();
+				while (1) {
+					if (key_state & KEY_SELECT)
+						goto keyboard_interrupt;
 
 					if (key_state & KEY_START)
 						break;
 
-					if (key_state & (KEY_A | KEY_UP))
+					if (key_state & (KEY_A | KEY_UP)) {
 						++dram[dram_p];
+						s |= S_NEED_REDRAW;
+					}
 
-					if (key_state & (KEY_B | KEY_DOWN))
+					if (key_state & (KEY_B | KEY_DOWN)) {
 						--dram[dram_p];
+						s |= S_NEED_REDRAW;
+					}
 
-					if (key_state & KEY_LEFT)
+					if (key_state & KEY_LEFT) {
 						dram[dram_p] -= 0x10;
+						s |= S_NEED_REDRAW;
+					}
 
-					if (key_state & KEY_RIGHT)
+					if (key_state & KEY_RIGHT) {
 						dram[dram_p] += 0x10;
+						s |= S_NEED_REDRAW;
+					}
 
-					if (key_state & KEY_SELECT)
-						goto stop;
+					if (s & S_NEED_REDRAW) {
+						iprintf("\033[11DINPUT: 0x%02X", dram[dram_p]);
+						s = s & ~S_NEED_REDRAW;
+					}
 
 					VBlankIntrWait();
+
+					scanKeys();
+					key_state = keysDown();
 				}
+
 				iprintf("\n");
-				
 				break;
 
 			case B_WHILE:
@@ -190,11 +208,10 @@ void run() {
 				break;
 		}
 
-		scanKeys();
-		if (keysDown() & KEY_SELECT) {
-stop:
+		if (key_state & KEY_SELECT) {
+keyboard_interrupt:
 			iprintf("\nKeyboard Interrupt");
-			break;
+			return;
 		}
 	}
 }
