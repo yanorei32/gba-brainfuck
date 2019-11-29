@@ -91,6 +91,12 @@ After power-on, it will go to Editor Mode.
 ### Data memory access violation
 If this happens, you did read or write out of the memory boundary.
 
+Minimum:
+```
+<+
++[>+]
+```
+
 Output:
 ```
 ERROR: PTR < 0
@@ -100,6 +106,11 @@ ERROR: PTR >= RAM SIZE
 ### Null character output
 If this happens, you tried to print NULL character.
 
+Minimum:
+```
+.
+```
+
 Output:
 ```
 ERROR: '\0' OUTPUT.
@@ -107,6 +118,12 @@ ERROR: '\0' OUTPUT.
 
 ### Syntax error
 It's your typo.
+
+Minimum:
+```
++]
+[
+```
 
 Output:
 ```
