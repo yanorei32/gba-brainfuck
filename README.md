@@ -5,34 +5,17 @@ Demo: https://www.youtube.com/watch?v=Dc2VkSRkmuM
 
 This application is based in part on the work of the devkitpro project (http://sourceforge.net/projects/devkitpro).
 
-## How to build GBA file
+[Download GBA file](https://github.com/Yanorei32/gba-brainfuck/releases)
 
-### Depends
-* git
-* Docker
-
-### Build
-```bash
-git clone https://github.com/yanorei32/gba-brainfuck/
-cd gba-brainfuck
-./make # It will output brainfuck.gba
-```
-
-#### If you want to pass some arguments to make:
-
-```bash
-./make clean
-```
-
-### Operability confirmed environments
+## Operability confirmed environments
 
 * GBA AGB-001 AGB-JPN (with EZ Flash IV)
 * GBA AGB-001 AGB-JPN-1 (with EZ Flash IV)
 * GBA AGB-001 C/AGB-JPN (with EZ Flash IV)
 * GBA AGB-001 C/AGB-JPN-1 (with EZ Flash IV)
 * GBA SP AGS-001 C/AGS-JPN (with EZ Flash IV)
-* [VisualBoyAdvance 1.7.2](https://ja.osdn.net/projects/sfnet_vba/) latest version as of 2019-11-28
-* [VisualBoyAdvance-M 2.1.4](https://github.com/visualboyadvance-m/visualboyadvance-m) latest version as of 2019-11-28
+* [VisualBoyAdvance](https://ja.osdn.net/projects/sfnet_vba/) 1.7.2 (latest version as of 2019-11-28)
+* [VisualBoyAdvance-M](https://github.com/visualboyadvance-m/visualboyadvance-m) 2.1.4 (latest version as of 2019-11-28)
 
 ## Key binding and mode
 
@@ -129,5 +112,24 @@ Output:
 ```
 ERROR: FAILED TO FIND '['
 ERROR: FAILED TO FIND ']'
+```
+
+## How to build GBA file
+
+### Depends
+* git
+* Docker
+
+### Build
+```bash
+git clone https://github.com/yanorei32/gba-brainfuck/
+cd gba-brainfuck
+./make # It will output brainfuck.gba
+```
+
+#### If you want to pass some arguments to make:
+
+```bash
+./make clean
 ```
 
