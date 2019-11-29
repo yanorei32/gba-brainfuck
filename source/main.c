@@ -40,9 +40,19 @@ typedef enum MODE {
 } MODE;
 
 unsigned char pram[CONSOLE_WIDTH*CONSOLE_HEIGHT];
-unsigned char dram[128];
+
+#define CHECK_DRAM_P_RANGE(dram_p) \
+	if (dram_p < 0) { \
+		iprintf("\nERROR: PTR < 0"); \
+		return; \
+	} \
+	if (sizeof(dram) / sizeof(char) <= dram_p) { \
+		iprintf("\nERROR: PTR >= RAM SIZE"); \
+		return; \
+	}
 
 void run() {
+	unsigned char dram[128];
 	int dram_p, pram_p, block_cnt;
 	u16 key_state;
 	STATUS_FLAGS s;
@@ -75,45 +85,17 @@ void run() {
 				break;
 
 			case B_INC_VAL:
-				if (dram_p < 0) {
-					iprintf("\nERROR: PTR < 0");
-					return;
-				}
-
-				if (sizeof(dram) / sizeof(char) <= dram_p) {
-					iprintf("\nERROR: PTR >= RAM SIZE");
-					return;
-				}
-
+				CHECK_DRAM_P_RANGE(dram_p)
 				++dram[dram_p];
-
 				break;
 
 			case B_DEC_VAL:
-				if (dram_p < 0) {
-					iprintf("\nERROR: PTR < 0");
-					return;
-				}
-
-				if (sizeof(dram) / sizeof(char) <= dram_p) {
-					iprintf("\nERROR: PTR >= RAM SIZE");
-					return;
-				}
-
+				CHECK_DRAM_P_RANGE(dram_p)
 				--dram[dram_p];
-
 				break;
 
 			case B_PUT_VAL:
-				if (dram_p < 0) {
-					iprintf("\nERROR: PTR < 0");
-					return;
-				}
-
-				if (sizeof(dram) / sizeof(char) <= dram_p) {
-					iprintf("\nERROR: PTR >= RAM SIZE");
-					return;
-				}
+				CHECK_DRAM_P_RANGE(dram_p)
 
 				if (!dram[dram_p]) {
 					iprintf("\nERROR: '\\0' OUTPUT");
@@ -121,9 +103,12 @@ void run() {
 				}
 
 				iprintf("%c", dram[dram_p]);
+
 				break;
 
 			case B_GET_VAL:
+				CHECK_DRAM_P_RANGE(dram_p)
+
 				iprintf("\n");
 
 				s |= S_NEED_REDRAW;
@@ -132,8 +117,7 @@ void run() {
 					if (key_state & KEY_SELECT)
 						goto keyboard_interrupt;
 
-					if (key_state & KEY_START)
-						break;
+					if (key_state & KEY_START) break;
 
 					if (key_state & (KEY_A | KEY_UP)) {
 						++dram[dram_p];
@@ -167,44 +151,49 @@ void run() {
 				}
 
 				iprintf("\n");
+
 				break;
 
 			case B_WHILE:
-				if (!dram[dram_p]) {
-					for (;;++pram_p) {
-						if (sizeof(pram) / sizeof(char) <= pram_p) {
-							iprintf("\nERROR: FAILED TO FIND ']'");
-							return;
-						}
+				CHECK_DRAM_P_RANGE(dram_p)
 
-						if (pram[pram_p] == B_WHILE) {
-							++block_cnt;
-							continue;
-						}
+				if (dram[dram_p]) break;
 
-						if (pram[pram_p] == B_DO_WHILE && !--block_cnt)
-							break;
+				for (;;++pram_p) {
+					if (sizeof(pram) / sizeof(char) <= pram_p) {
+						iprintf("\nERROR: FAILED TO FIND ']'");
+						return;
 					}
+
+					if (pram[pram_p] == B_WHILE) {
+						++block_cnt;
+						continue;
+					}
+
+					if (pram[pram_p] == B_DO_WHILE && !--block_cnt) break;
 				}
+
 				break;
 
 			case B_DO_WHILE:
-				if (dram[dram_p]) {
-					for (;;--pram_p) {
-						if (pram_p < 0) {
-							iprintf("\nERROR: FAILED TO FIND '['");
-							return;
-						}
+				CHECK_DRAM_P_RANGE(dram_p)
 
-						if (pram[pram_p] == B_DO_WHILE) {
-							++block_cnt;
-							continue;
-						}
+				if (!dram[dram_p]) break;
 
-						if (pram[pram_p] == B_WHILE && !--block_cnt)
-							break;
+				for (;;--pram_p) {
+					if (pram_p < 0) {
+						iprintf("\nERROR: FAILED TO FIND '['");
+						return;
 					}
+
+					if (pram[pram_p] == B_DO_WHILE) {
+						++block_cnt;
+						continue;
+					}
+
+					if (pram[pram_p] == B_WHILE && !--block_cnt) break;
 				}
+
 				break;
 		}
 
