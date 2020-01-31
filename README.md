@@ -28,7 +28,7 @@ After power-on, it will go to Editor Mode.
 | Key                | Binding                                           |
 |:-------------------|:--------------------------------------------------|
 | `↑` or `A`         | Change program memory operator.                   |
-| `↓`'               | Change program memory operator.                   |
+| `↓`                | Change program memory operator.                   |
 | `→` or `B`         | Move the cursor to next program memory.           |
 | `←`                | Move the cursor to forward program memory.        |
 | `START`            | Switch to Runner Mode and execute program memory. |
